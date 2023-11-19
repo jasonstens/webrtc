@@ -8,7 +8,7 @@
 #include <string.h>
 #include <errno.h>
 
-#define TCP_PORT 8111
+#define TCP_PORT 8444
 #define MAX_BACK_LOG_LEN 10
 #define MAX_BUF_LEN 1024
 
@@ -62,6 +62,8 @@ int main()
         accept_fd = accept(socket_fd, (struct sockaddr*)&remote_addr, &addr_len);
 
         for (;;) {
+            memset(buf, 0, MAX_BUF_LEN);
+
             // recv
             ret = recv(accept_fd, (void *)buf, MAX_BUF_LEN, 0);
             if (ret <= 0) {
@@ -70,8 +72,10 @@ int main()
             std::cout << "receive: " << buf << std::endl;
             // send 回显
             ret = send(accept_fd, (void *)buf, MAX_BUF_LEN, 0);
+            std::cout << "send: " << buf << std::endl;
+
         }
-        printf("close client connection...\n");
+        printf("close socket connection...\n");
         close(accept_fd);
     }
     printf("quit server...\n");
