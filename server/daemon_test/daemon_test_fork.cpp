@@ -3,7 +3,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-void daemonise()
+void daemonize()
 {
     int fd;
     // fork 创建子进程
@@ -16,8 +16,10 @@ void daemonise()
         exit(0);
     }
     
+    // 创建新的进程会话, 以替换老的session， 应该使用被接管的init的session_id
+    setsid();
     // 切换为根目录
-    if (chdir("/") == -1) {
+    if (chdir("/") < 0) {
         std::cout << "change root dir failed!" << std::endl;
         exit(-1);
     }
@@ -36,7 +38,7 @@ void daemonise()
 int main(int argc, char* argv[])
 {
 
-    daemonise();
+    daemonize();
 
     while(true) {
         sleep(1);
